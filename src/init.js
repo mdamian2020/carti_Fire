@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD25g0kGxoXqLl7yuk08r2_Od3Q",
+    apiKey: "AIzaSyD25g0kGxoXqLl7yuk08r2_Od3Q",  //  Cheie modificata, deci nu functioneaza. Va trebuie propria cheie.
     authDomain: "carti-faa9e.firebaseapp.com",
     projectId: "carti-faa9e",
     storageBucket: "carti-faa9e.appspot.com",
