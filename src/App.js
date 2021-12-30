@@ -1,49 +1,47 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
+import { Container } from "react-bootstrap";
 import ListaCarti from "./listacarti";
-import Adaug from "./adaug";
-import Container from "react-bootstrap/Container";
 import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore"; 
 import app from "./init";
+import Adaug from './adaug';
 
 const App = () => {
   const [lista, setLista] = useState([]);
 
   const db = getFirestore(app);  //  Se include pentru a accesa firestore
-  let listacarti = [];
 
   const getLista = async () => {
-    listacarti = await getDocs(collection(db, "cartiCopii"));
+    const listacarti = await getDocs(collection(db, "cartiCopii"));
     let listaNoua = listacarti.docs.map((doc) => {
       let carte = doc.data();  //  Creez un obiect nou
       carte.src = `imagini/${carte.src}`;  //  Corectez calea
-      carte.id = doc.id;      // adaug si ID-ul (pentru "key")
+      carte.id = doc.id;      // adaug ID-ul în obiectul "carte" (trebuie!)
       return carte;
     });
     setLista(listaNoua);   //  Actualizez obiectul "state"
   };
 
   useEffect(() => {
-    let listaNoua = listacarti.docs.map((doc) => {
-      let carte = doc.data();  //  Creez un obiect nou
-      carte.src = `imagini/${carte.src}`;  //  Corectez calea
-      carte.id = doc.id;      // adaug si ID-ul (pentru "key")
-      return carte;
-    });
-    setLista(listaNoua);   //  Actualizez obiectul "state"
+    getLista();
   }, []);
 
-  const adaugCarte = async (carte) => {
+  const adaug = async (carte) => {
     // Adaug un nou document folosind un ID generat automat.
     const docRef = await addDoc(collection(db, "cartiCopii"), carte);
     getLista();  //  Reafisez lista
     console.log("Document adaugat cu ID: ", docRef.id);
   };
-
+ 
   return (
-    <Container>
+    <>
+      <Container>
+        <h1>Carti pentru copii</h1>
+      </Container>
       <ListaCarti listaCarti={lista} />
-      <Adaug transmit={adaugCarte} />
-    </Container>
+      <Container>
+        <Adaug transmit={adaug} />
+      </Container>
+    </>
   );
 }
 
